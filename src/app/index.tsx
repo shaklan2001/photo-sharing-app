@@ -1,16 +1,12 @@
 import { Link } from 'expo-router'
 import React, { useEffect } from 'react'
 import { View, Text } from 'react-native'
-import { supabase } from '../lib/superbase'
+import { useAuth } from '../providers/AuthProvider'
 
 export default function Entry () {
-
-  useEffect(()=> {
-   supabase.from('events').select('*, assets(*)').then(({data})=> {
-    console.log(JSON.stringify(data, null, 2))
-   })
-  },[])
-
+  const { user, isAuthenticated } = useAuth()
+  console.log(user, isAuthenticated)
+  
   return (
     <View className="flex-1 justify-center items-center bg-gray-900">
       <Link href="/camera">
