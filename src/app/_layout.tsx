@@ -23,7 +23,7 @@ const RootLayoutNav = () => {
             title: 'Camera',
             headerBackButtonDisplayMode: 'minimal',
             headerTransparent: true,
-            headerBlurEffect: 'dark',
+            headerBlurEffect: 'systemChromeMaterial',
             headerRight: () => (
               <Link href="/camera" className="ml-2">
                   <Feather name="share" size={22} color="white" />
