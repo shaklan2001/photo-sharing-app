@@ -3,6 +3,7 @@ import { useCallback, useRef, useState } from 'react';
 import { ActivityIndicator, Button, StyleSheet, Text, Pressable, View } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { uploadToCloudinary } from '../lib/cloudinary';
 
 export default function Camera() {
   const [facing, setFacing] = useState<CameraType>('back');
@@ -19,9 +20,9 @@ export default function Camera() {
   },[]);
 
   const takePicture = useCallback(async () => {
-    console.log('take picture');
     const photo = await camera.current?.takePictureAsync();
-    console.log(photo);
+    const cloudinaryResponse =  await uploadToCloudinary(photo!.uri);
+    console.log(cloudinaryResponse);
   },[]);
 
   if (!permission) {
