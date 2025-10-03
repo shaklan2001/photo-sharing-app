@@ -1,21 +1,45 @@
 import { Link } from 'expo-router'
-import React, { useEffect } from 'react'
-import { View, Text } from 'react-native'
+import React from 'react'
+import { Text, ActivityIndicator, FlatList, Pressable } from 'react-native'
 import { useAuth } from '../providers/AuthProvider'
+import { useQuery } from '@tanstack/react-query'
+import { getEvents } from '../services/events'
+import Ionicons from '@expo/vector-icons/Ionicons'
+import EventListItem from '../components/EventListItem'
 
 export default function Entry () {
   const { user, isAuthenticated } = useAuth()
-  console.log(user, isAuthenticated)
-  
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['events'],
+    queryFn: getEvents,
+  })
+
+  if (isLoading) {
+    return <ActivityIndicator />
+  }
+
+  if (isError) {
+    return <Text>Error: {isError.message}</Text>
+  }
+
   return (
-    <View className="flex-1 justify-center items-center bg-gray-900">
-      <Link href="/camera">
-        <Text className="text-white text-xl">Go to Camera</Text>
-      </Link>
-      <Link href="/events">
-        <Text className="text-white text-xl">Go to Events</Text>
-      </Link>
-    </View>
+    <FlatList
+      data={data}
+      contentContainerClassName='gap-4 p-4'
+      renderItem={({ item }) => <EventListItem event={item} />}
+      contentInsetAdjustmentBehavior='automatic'
+      ListHeaderComponent={() => (
+        <Link href='/events/create' asChild>
+          <Pressable className='bg-purple-800 p-4 rounded-lg items-center justify-center flex-row gap-2'>
+            <Ionicons name='add-outline' size={24} color='white' />
+            <Text className='text-white text-lg font-semibold'>
+              Create Event
+            </Text>
+          </Pressable>
+        </Link>
+      )}
+    />
   )
 }
 
