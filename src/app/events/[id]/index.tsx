@@ -51,10 +51,9 @@ export default function EventDetails() {
 
   return (
     <>
-    <SafeAreaView className='flex-1'>
       <Stack.Screen
         options={{
-          title: event.name,
+          title: event.name || 'Event',
           headerRight: () => (
             <Link href={`/events/${id}/share`} asChild>
               <Ionicons
@@ -67,19 +66,17 @@ export default function EventDetails() {
           ),
         }}
       />
-
+      <SafeAreaView className='flex-1'>
       <Galeria urls={urls} theme='dark'>
         <FlatList
           data={event.assets}
           numColumns={2}
-          contentContainerClassName='gap-1 p-4'
-          columnWrapperClassName='gap-1'
+          contentContainerStyle={{ padding: 16 }}
+          columnWrapperStyle={{ justifyContent: 'space-between', marginBottom: 8 }}
           renderItem={({ item, index }) => (
-            <View className='flex-1 max-w-[50%]'>
-              <Galeria.Image key={item.id} index={index}>
-                <AssetItem asset={item} />
-              </Galeria.Image>
-            </View>
+            <Galeria.Image key={item.id} index={index}>
+              <AssetItem asset={item} />
+            </Galeria.Image>
           )}
           contentInsetAdjustmentBehavior='automatic'
           refreshing={isRefetching}

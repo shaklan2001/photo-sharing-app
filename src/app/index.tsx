@@ -1,11 +1,12 @@
 import { Link } from 'expo-router'
 import React from 'react'
-import { Text, ActivityIndicator, FlatList, Pressable } from 'react-native'
+import { Text, ActivityIndicator, FlatList, Pressable, View } from 'react-native'
 import { useAuth } from '../providers/AuthProvider'
 import { useQuery } from '@tanstack/react-query'
 import { getEvents } from '../services/events'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import EventListItem from '../components/EventListItem'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function Entry () {
   const { user, isAuthenticated } = useAuth()
@@ -20,13 +21,15 @@ export default function Entry () {
   }
 
   if (isError) {
-    return <Text>Error: {isError.message}</Text>
+    return <Text>Error loading events</Text>
   }
 
   return (
+    <SafeAreaView className='flex-1'>
     <FlatList
       data={data}
-      contentContainerClassName='gap-4 p-4'
+      contentContainerStyle={{ padding: 16 }}
+      ItemSeparatorComponent={() => <View style={{ height: 16 }} />}
       renderItem={({ item }) => <EventListItem event={item} />}
       contentInsetAdjustmentBehavior='automatic'
       ListHeaderComponent={() => (
@@ -40,6 +43,7 @@ export default function Entry () {
         </Link>
       )}
     />
+    </SafeAreaView>
   )
 }
 

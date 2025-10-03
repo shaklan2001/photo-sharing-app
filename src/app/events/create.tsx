@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { useAuth } from '../../providers/AuthProvider';
 import { createEvent } from '../../services/events';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function CreateEvent() {
   const [name, setName] = useState('');
@@ -21,18 +22,20 @@ export default function CreateEvent() {
   });
 
   return (
-    <View className='flex-1 p-4 gap-4'>
-      <TextInput
-        value={name}
-        onChangeText={setName}
-        placeholder='Event Name'
-        className='bg-neutral-800 p-5 rounded-lg text-white'
-        placeholderTextColor='gray'
-      />
-      <Button
-        title='Create Event'
-        onPress={() => createEventMutation.mutate()}
-      />
-    </View>
+    <SafeAreaView className='flex-1'>
+      <View className='flex-1 p-4 gap-4'>
+        <TextInput
+          value={name}
+          onChangeText={setName}
+          placeholder='Event Name'
+          className='bg-neutral-800 p-5 rounded-lg text-white'
+          placeholderTextColor='gray'
+        />
+        <Button
+          title='Create Event'
+          onPress={() => createEventMutation.mutate()}
+        />
+      </View>
+    </SafeAreaView>
   );
 }

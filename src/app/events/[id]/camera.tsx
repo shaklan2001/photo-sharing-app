@@ -8,6 +8,7 @@ import { useLocalSearchParams } from 'expo-router';
 import { useAuth } from '../../../providers/AuthProvider';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { insertAsset } from '../../../services/assets';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Camera() {
   const [facing, setFacing] = useState<CameraType>('back');
@@ -57,21 +58,23 @@ export default function Camera() {
   }
 
   return (
-    <View style={styles.container}>
-      <CameraView ref={camera} style={styles.camera} facing={facing} flash={flashMode} />
-      <View className='w-full flex-row justify-between p-2 col-span-2 absolute bottom-32'>
-        <Pressable onPress={openFlash}>
-          {flashMode === 'on' ? <Ionicons name="flash-sharp" size={24} color="white" /> : <Ionicons name= "flash-outline" size={24} color="white" />}
-        </Pressable>
-        <Pressable onPress={toggleCameraFacing}>
-          <MaterialCommunityIcons name="camera-flip-outline" size={24} color="white" />
-        </Pressable>
+    <SafeAreaView className='flex-1'>
+      <View style={styles.container}>
+        <CameraView ref={camera} style={styles.camera} facing={facing} flash={flashMode} />
+        <View className='w-full flex-row justify-between p-2 col-span-2 absolute bottom-32'>
+          <Pressable onPress={openFlash}>
+            {flashMode === 'on' ? <Ionicons name="flash-sharp" size={24} color="white" /> : <Ionicons name= "flash-outline" size={24} color="white" />}
+          </Pressable>
+          <Pressable onPress={toggleCameraFacing}>
+            <MaterialCommunityIcons name="camera-flip-outline" size={24} color="white" />
+          </Pressable>
+        </View>
+        <View className='w-full flex-row justify-evenly p-6'>
+          <Pressable className='bg-white rounded-full w-20 h-20' onPress={takePicture}>
+          </Pressable>
+        </View>
       </View>
-      <View className='w-full flex-row justify-evenly p-6'>
-        <Pressable className='bg-white rounded-full w-20 h-20' onPress={takePicture}>
-        </Pressable>
-      </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
