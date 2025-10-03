@@ -1,19 +1,23 @@
 import {
   View,
   Text,
+  useWindowDimensions,
   ActivityIndicator,
   Pressable,
   FlatList,
-} from "react-native";
-import { Link, useLocalSearchParams } from "expo-router";
-import { useQuery } from "@tanstack/react-query";
-import { Stack } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
-import { artisticFilter } from "@cloudinary/url-gen/actions/effect";
-import { getEvent } from "../../../services/events";
-import { cloudinary } from "../../../lib/cloudinary";
-import { Galeria } from "@nandorojo/galeria";
-import AssetItem from "../../../components/AssetItem";
+} from 'react-native';
+import { Link, useLocalSearchParams } from 'expo-router';
+
+import { useQuery } from '@tanstack/react-query';
+import { Stack } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+
+import { Galeria } from '@nandorojo/galeria';
+import { artisticFilter } from '@cloudinary/url-gen/actions/effect';
+import { getEvent } from '../../../services/events';
+import { cloudinary } from '../../../lib/cloudinary';
+import AssetItem from '../../../components/AssetItem';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function EventDetails() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -25,12 +29,12 @@ export default function EventDetails() {
     isRefetching,
     refetch,
   } = useQuery({
-    queryKey: ["events", id],
+    queryKey: ['events', id],
     queryFn: () => getEvent(id),
   });
 
   const urls = (event?.assets || []).map((asset) =>
-    cloudinary.image(asset.asset_id!).effect(artisticFilter("al_dente")).toURL()
+    cloudinary.image(asset.asset_id!).effect(artisticFilter('al_dente')).toURL()
   );
 
   if (isLoading) {
@@ -47,53 +51,48 @@ export default function EventDetails() {
 
   return (
     <>
+    <SafeAreaView className='flex-1'>
       <Stack.Screen
         options={{
-          title: event.name || 'Event',
+          title: event.name,
           headerRight: () => (
-            <Link href={`/events/${id || ''}/share`} asChild>
+            <Link href={`/events/${id}/share`} asChild>
               <Ionicons
-                name="share-outline"
+                name='share-outline'
                 size={24}
-                color="white"
-                className="mr-2 ml-2"
+                color='white'
+                className='mr-2 ml-2'
               />
             </Link>
           ),
         }}
       />
 
-      <FlatList
-        data={event.assets}
-        numColumns={2}
-        contentContainerClassName="gap-1 p-4"
-        columnWrapperClassName="gap-1"
-        renderItem={({ item }) => (
-          <View className="flex-1 max-w-[50%]">
-            <AssetItem asset={item} />
-          </View>
-        )}
-        contentInsetAdjustmentBehavior="automatic"
-        refreshing={isRefetching}
-        onRefresh={refetch}
-      />
-
-      {/* <FlatList
+      <Galeria urls={urls} theme='dark'>
+        <FlatList
           data={event.assets}
           numColumns={2}
           contentContainerClassName='gap-1 p-4'
           columnWrapperClassName='gap-1'
-          renderItem={({ item }) => <AssetItem asset={item} />}
+          renderItem={({ item, index }) => (
+            <View className='flex-1 max-w-[50%]'>
+              <Galeria.Image key={item.id} index={index}>
+                <AssetItem asset={item} />
+              </Galeria.Image>
+            </View>
+          )}
           contentInsetAdjustmentBehavior='automatic'
           refreshing={isRefetching}
           onRefresh={refetch}
-        /> */}
+        />
+      </Galeria>
 
-      <Link href={`/events/${id || ''}/camera`} asChild>
-        <Pressable className="absolute bottom-12 right-4 flex-row items-center justify-center bg-white p-6 rounded-full">
-          <Ionicons name="camera-outline" size={40} color="black" />
+      <Link href={`/events/${id}/camera`} asChild>
+        <Pressable className='absolute bottom-12 right-4 flex-row items-center justify-center bg-white p-6 rounded-full'>
+          <Ionicons name='camera-outline' size={40} color='black' />
         </Pressable>
       </Link>
+      </SafeAreaView>
     </>
   );
 }

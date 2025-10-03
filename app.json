@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "PhotoSharing",
-    "slug": "PhotoSharing",
+    "slug": "events-memories",
     "scheme": "photosharing",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -15,7 +15,10 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.shaklan2001.PhotoSharing"
+      "bundleIdentifier": "com.shaklan2001.PhotoSharing",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -46,6 +49,13 @@
           "recordAudioAndroid": true
         }
       ]
-    ]
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "b495b167-83a4-4244-80a6-603732bfb64e"
+      }
+    },
+    "owner": "shaklan2001"
   }
 }
