@@ -4,12 +4,27 @@ import { ActivityIndicator, Button, StyleSheet, Text, Pressable, View } from 're
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { uploadToCloudinary } from '../../../lib/cloudinary';
+import { useLocalSearchParams } from 'expo-router';
+import { useAuth } from '../../../providers/AuthProvider';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { insertAsset } from '../../../services/assets';
 
 export default function Camera() {
   const [facing, setFacing] = useState<CameraType>('back');
   const [permission, requestPermission] = useCameraPermissions();
   const [flashMode, setFlashMode] = useState('off');
   const camera = useRef<CameraView>(null);
+  const queryClient = useQueryClient();
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const { user } = useAuth();
+
+  const insertAssetMutation = useMutation({
+    mutationFn: (assetId: string) =>
+      insertAsset({ event_id: id, user_id: user?.id, asset_id: assetId }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['events', id] });
+    },
+  });
 
   const toggleCameraFacing = useCallback(() => {
     setFacing(current => (current === 'back' ? 'front' : 'back'));
@@ -21,8 +36,11 @@ export default function Camera() {
 
   const takePicture = useCallback(async () => {
     const photo = await camera.current?.takePictureAsync();
+    if (!photo?.uri) return;
+
     const cloudinaryResponse =  await uploadToCloudinary(photo!.uri);
-    console.log(cloudinaryResponse);
+
+    insertAssetMutation.mutate(cloudinaryResponse.public_id);
   },[]);
 
   if (!permission) {

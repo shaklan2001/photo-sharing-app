@@ -1,6 +1,6 @@
 import { useLocalSearchParams } from 'expo-router';
 import { View, Text } from 'react-native';
-// import QRCode from 'react-native-qrcode-svg';
+import QRCode from 'react-native-qrcode-svg';
 
 export default function Share() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -12,10 +12,10 @@ export default function Share() {
       </Text>
 
       {/* <QRCode value={`photosharing://events/${id}/join`} size={200} /> */}
-      {/* <QRCode
+      <QRCode
         value={`exp://192.168.1.144:8081/--/events/${id}/join`}
         size={200}
-      /> */}
+      />
     </View>
   );
 }
