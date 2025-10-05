@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { useAuth } from '../../providers/TokenAuthProvider';
+import { useAuth } from '../../providers/TokenAuthProvider';
 import { createEvent } from '../../services/events';
 import { LinearGradient } from 'expo-linear-gradient';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -11,7 +12,11 @@ import { Stack } from 'expo-router';
 
 export default function CreateEvent() {
   const [name, setName] = useState('');
-  const { user, isAuthenticated } = useAuth();
+  const { user } = useAuth();
+  const isAuthenticated = !!user;
+
+  console.log(user);
+  console.log(isAuthenticated);
   const queryClient = useQueryClient();
 
   const createEventMutation = useMutation({
@@ -19,7 +24,6 @@ export default function CreateEvent() {
       if (!user?.google_id) {
         throw new Error('User not authenticated');
       }
-      // Use google_id as the user ID for consistency
       return createEvent({ name, owner_id: user.google_id }, user.google_id);
     },
     onSuccess: (data) => {
@@ -47,9 +51,7 @@ export default function CreateEvent() {
   return (
     <>
       <Stack.Screen options={{ headerShown: false }} />
-      
       <SafeAreaView className='flex-1 bg-white'>
-        {/* Custom Header */}
         <View className='flex-row items-center justify-between px-4 py-3'>
           <Pressable onPress={() => router.back()}>
             <LinearGradient
