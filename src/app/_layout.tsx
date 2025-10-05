@@ -2,7 +2,7 @@ import { Stack, Link } from "expo-router";
 import { DarkTheme, ThemeProvider } from "@react-navigation/native";
 import { Platform } from "react-native";
 import "../../global.css";
-import { AuthProvider } from "../providers/AuthProvider";
+import { AuthProvider } from "../providers/TokenAuthProvider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
@@ -109,6 +109,13 @@ const RootLayoutNav = () => {
 
       <Stack.Screen
         name="events/create"
+        options={{
+          headerShown: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="profile"
         options={{
           headerShown: false,
         }}

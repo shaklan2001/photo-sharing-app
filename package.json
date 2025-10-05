@@ -12,7 +12,10 @@
     "build:dev:android": "eas build --platform android --profile development",
     "build:android": "eas build --platform android --profile production",
     "build:android:local": "eas build --platform android --profile development --device",
-    "build:android:apk": "eas build --platform android --profile production --local"
+    "build:android:apk": "eas build --platform android --profile production --local",
+    "update:preview": "eas update --channel preview",
+    "update:production": "eas update --channel production",
+    "update:dev": "eas update --channel development"
   },
   "dependencies": {
     "@babel/plugin-transform-react-jsx": "^7.27.1",
@@ -35,6 +38,7 @@
     "expo-linking": "~8.0.8",
     "expo-router": "~6.0.10",
     "expo-status-bar": "~3.0.8",
+    "expo-updates": "~29.0.12",
     "expo-web-browser": "~15.0.8",
     "nativewind": "^4.2.1",
     "react": "19.1.0",

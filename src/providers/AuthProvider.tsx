@@ -1,5 +1,5 @@
 import { User } from '@supabase/supabase-js'
-import React, { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 import { supabase } from '../lib/superbase'
 import { signInWithGoogle, signOutGoogle } from '../lib/googleAuth'
 

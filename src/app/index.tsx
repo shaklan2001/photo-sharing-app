@@ -1,34 +1,36 @@
 import { useEffect, useState } from 'react';
 import { router } from 'expo-router';
-import { useAuth } from '../providers/AuthProvider';
-import { View, ActivityIndicator } from 'react-native';
+import { useAuth } from '../providers/TokenAuthProvider';
+import SplashScreen from './splash';
+import { useUpdates } from '../hooks/useUpdates';
 
-export default function EventsScreen() {
-  const { isAuthenticated } = useAuth();
+export default function AuthCheckScreen() {
+  const { isAuthenticated, isLoading } = useAuth();
   const [isReady, setIsReady] = useState(false);
+  const { checkForUpdates } = useUpdates();
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsReady(true);
     }, 100);
 
+    checkForUpdates();
+
     return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
-    if (!isReady) return;
-
+    if (!isReady || isLoading) return;
+    
     if (!isAuthenticated) {
       router.replace('/onboarding');
     } else {
       router.replace('/events');
     }
-  }, [isAuthenticated, isReady]);
+  }, [isAuthenticated, isReady, isLoading]);
 
   return (
-    <View className="flex-1 justify-center items-center bg-black">
-      <ActivityIndicator size="large" color="#fdbf7b" />
-    </View>
+    <SplashScreen />
   );
 }
 
