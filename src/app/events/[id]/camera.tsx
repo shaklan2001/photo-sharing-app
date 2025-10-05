@@ -21,7 +21,7 @@ export default function Camera() {
 
   const insertAssetMutation = useMutation({
     mutationFn: (assetId: string) =>
-      insertAsset({ event_id: id, user_id: user?.id, asset_id: assetId }),
+      insertAsset({ event_id: id, user_id: user?.google_id, asset_id: assetId }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['events', id] });
     },

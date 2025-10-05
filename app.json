@@ -27,13 +27,11 @@
       "predictiveBackGestureEnabled": false,
       "permissions": [
         "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO"
       ],
       "package": "com.shaklan2001.PhotoSharing"
-    },
-    "web": {
-      "favicon": "./assets/favicon.png",
-      "bundler": "metro"
     },
     "plugins": [
       "expo-router",
@@ -60,6 +58,12 @@
         "projectId": "af385fdd-9032-4540-b1c3-e2b91235d973"
       }
     },
-    "owner": "shaklan2001"
+    "owner": "shaklan2001",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/af385fdd-9032-4540-b1c3-e2b91235d973"
+    }
   }
 }

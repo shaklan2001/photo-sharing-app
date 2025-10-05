@@ -17,7 +17,7 @@ export default function Join() {
   });
 
   const joinEventMutation = useMutation({
-    mutationFn: () => joinEvent(id, user?.id!),
+    mutationFn: () => joinEvent(id, user?.google_id!),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['events', id] });
       router.replace(`/events/${id}`);

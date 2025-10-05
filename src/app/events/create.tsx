@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { useAuth } from '../../providers/TokenAuthProvider';
+import { useAuth } from '../../providers/TokenAuthProvider';
 import { createEvent } from '../../services/events';
 import { LinearGradient } from 'expo-linear-gradient';
 import Ionicons from '@expo/vector-icons/Ionicons';
