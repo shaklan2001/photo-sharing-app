@@ -6,7 +6,7 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { uploadToCloudinary } from '../../../lib/cloudinary';
 import { useLocalSearchParams } from 'expo-router';
-import { useAuth } from '../../../providers/AuthProvider';
+import { useAuth } from '../../../providers/TokenAuthProvider';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { insertAsset } from '../../../services/assets';
 

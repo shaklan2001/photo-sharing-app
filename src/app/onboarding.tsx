@@ -38,7 +38,7 @@ export default function Onboarding() {
   const [isSigningIn, setIsSigningIn] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(50)).current;
-  const { signInWithGoogle } = useAuth();
+  const { signInWithGoogle, signInAnonymously } = useAuth();
 
   useEffect(() => {
     fadeAnim.setValue(0);
@@ -62,8 +62,30 @@ export default function Onboarding() {
     if (currentIndex < onboardingData.length - 1) {
       setCurrentIndex(currentIndex + 1);
     } else {
-      // Navigate to main app
       router.replace("/events");
+    }
+  };
+
+  const handleGuestSignIn = async () => {
+    try {
+      setIsSigningIn(true);
+      
+      const { data, error } = await signInAnonymously();
+      
+      if (error) {
+        Alert.alert('Sign In Error', 'Failed to sign in as guest');
+        return;
+      }
+
+      if (data?.success) {
+        router.replace("/events");
+      } else {
+        Alert.alert('Sign In Error', 'Failed to sign in as guest');
+      }
+    } catch (error) {
+      Alert.alert('Sign In Error', 'Something went wrong. Please try again.');
+    } finally {
+      setIsSigningIn(false);
     }
   };
 
@@ -191,13 +213,15 @@ export default function Onboarding() {
                   </Text>
                 </Pressable>
 
-                {/* Alternative Sign Up Button */}
                 <Pressable
-                  onPress={() => router.replace("/events")}
-                  className="bg-[#ffb600] rounded-[30px] py-4 flex-row items-center justify-center"
+                  onPress={handleGuestSignIn}
+                  disabled={isSigningIn}
+                  className={`bg-[#ffb600] rounded-[30px] py-4 flex-row items-center justify-center ${
+                    isSigningIn ? 'opacity-50' : ''
+                  }`}
                 >
                   <Text className="text-[#333] text-lg font-bold mr-1.5">
-                    Continue as Guest
+                    {isSigningIn ? 'Signing in...' : 'Continue as Guest'}
                   </Text>
                   <Ionicons
                     name="person-outline"

@@ -21,16 +21,13 @@ const ThinHeader = memo(() => {
   } | null>(null);
 
   useEffect(() => {
-    // Skip profile fetching since we're using token-based auth
   }, [user]);
 
   const getUserDisplayName = () => {
-    // Use user data from token auth provider
     if (user?.full_name) {
       return user.full_name;
     }
     
-    // Check database profile as fallback
     if (userProfile?.full_name) {
       return userProfile.full_name;
     }
@@ -40,7 +37,6 @@ const ThinHeader = memo(() => {
 
   return (
     <View className='flex-row items-center justify-between px-4 py-2 bg-white border-b border-[#ffe9e7]'>
-      {/* Left side - Logo and App Name */}
       <View className='flex-row items-center'>
         <View className='w-12 h-12 rounded-lg items-center justify-center'>
           <Image source={require('../../assets/icon.png')} className='w-8 h-8' />
@@ -48,7 +44,6 @@ const ThinHeader = memo(() => {
         <Text className='text-xl font-bold text-gray-800'>SnapHive</Text>
       </View>
 
-      {/* Right side - User Profile */}
       <Pressable 
         onPress={() => router.push('/profile')}
         className='flex-row items-center'
