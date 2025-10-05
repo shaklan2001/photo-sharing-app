@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
-import { View, Text, Pressable, Animated, Image } from "react-native";
+import { View, Text, Pressable, Animated, Image, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { useAuth } from "../providers/AuthProvider";
 
 const onboardingData = [
   {
@@ -34,8 +35,10 @@ const onboardingData = [
 
 export default function Onboarding() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isSigningIn, setIsSigningIn] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(50)).current;
+  const { signInWithGoogle } = useAuth();
 
   useEffect(() => {
     fadeAnim.setValue(0);
@@ -72,6 +75,26 @@ export default function Onboarding() {
 
   const currentData = onboardingData[currentIndex];
   const isLastScreen = currentIndex === onboardingData.length - 1;
+
+  const handleGoogleSignIn = async () => {
+    try {
+      setIsSigningIn(true);
+      const { data, error } = await signInWithGoogle();
+      
+      if (error) {
+        Alert.alert('Sign In Error', error.message || 'Failed to sign in with Google');
+        return;
+      }
+
+      if (data?.user) {
+        router.replace("/events");
+      }
+    } catch (error) {
+      Alert.alert('Sign In Error', 'Something went wrong. Please try again.');
+    } finally {
+      setIsSigningIn(false);
+    }
+  };
 
   return (
     <SafeAreaView className="flex-1">
@@ -145,20 +168,42 @@ export default function Onboarding() {
                 />
               </Pressable>
             ) : (
-              <Pressable
-                onPress={() => router.replace("/events")}
-                className="flex-1 bg-[#ffb600] rounded-[30px] py-4 flex-row items-center justify-center"
-              >
-                <Text className="text-[#333] text-lg font-bold mr-1.5">
-                  Sign Up
-                </Text>
-                <Ionicons
-                  name="rocket"
-                  size={20}
-                  color="#333"
-                  style={{ marginTop: 2 }}
-                />
-              </Pressable>
+              <View className="flex-1 gap-3">
+                {/* Google Sign-In Button */}
+                <Pressable
+                  onPress={handleGoogleSignIn}
+                  disabled={isSigningIn}
+                  className={`bg-white rounded-[30px] py-4 flex-row items-center justify-center ${
+                    isSigningIn ? 'opacity-50' : ''
+                  }`}
+                >
+                  <Ionicons
+                    name="logo-google"
+                    size={20}
+                    color="#4285F4"
+                    style={{ marginRight: 8 }}
+                  />
+                  <Text className="text-gray-700 text-lg font-bold">
+                    {isSigningIn ? 'Signing in...' : 'Continue with Google'}
+                  </Text>
+                </Pressable>
+
+                {/* Alternative Sign Up Button */}
+                <Pressable
+                  onPress={() => router.replace("/events")}
+                  className="bg-[#ffb600] rounded-[30px] py-4 flex-row items-center justify-center"
+                >
+                  <Text className="text-[#333] text-lg font-bold mr-1.5">
+                    Continue as Guest
+                  </Text>
+                  <Ionicons
+                    name="person-outline"
+                    size={20}
+                    color="#333"
+                    style={{ marginTop: 2 }}
+                  />
+                </Pressable>
+              </View>
             )}
           </Animated.View>
         </View>
