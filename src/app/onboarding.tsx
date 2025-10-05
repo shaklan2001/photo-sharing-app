@@ -1,10 +1,10 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { View, Text, Pressable, Animated, Image, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useAuth } from "../providers/AuthProvider";
+import { useAuth } from "../providers/TokenAuthProvider";
 
 const onboardingData = [
   {
@@ -79,6 +79,7 @@ export default function Onboarding() {
   const handleGoogleSignIn = async () => {
     try {
       setIsSigningIn(true);
+      
       const { data, error } = await signInWithGoogle();
       
       if (error) {
@@ -86,8 +87,10 @@ export default function Onboarding() {
         return;
       }
 
-      if (data?.user) {
+      if (data?.success) {
         router.replace("/events");
+      } else {
+        Alert.alert('Sign In Error', 'Failed to sign in with Google');
       }
     } catch (error) {
       Alert.alert('Sign In Error', 'Something went wrong. Please try again.');

@@ -1,14 +1,73 @@
 import { Link } from 'expo-router'
-import React, { useRef, memo } from 'react'
-import { Text, ActivityIndicator, FlatList, Pressable, View } from 'react-native'
+import { useRef, memo, useState, useEffect } from 'react'
+import { Text, ActivityIndicator, FlatList, Pressable, View, Image } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { useAuth } from '../providers/AuthProvider'
+import { useAuth } from '../providers/TokenAuthProvider'
 import { useQuery } from '@tanstack/react-query'
 import { getEvents } from '../services/events'
 import { getAssetsForEvent } from '../services/assets'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { LinearGradient } from 'expo-linear-gradient'
 import AssetItem from '../components/AssetItem'
+import { router } from 'expo-router'
+
+// Thin Header Component
+const ThinHeader = memo(() => {
+  const { user } = useAuth();
+  const [userProfile, setUserProfile] = useState<{
+    full_name?: string | null;
+    avatar_url?: string | null;
+    username?: string | null;
+  } | null>(null);
+
+  useEffect(() => {
+    // Skip profile fetching since we're using token-based auth
+  }, [user]);
+
+  const getUserDisplayName = () => {
+    // Use user data from token auth provider
+    if (user?.full_name) {
+      return user.full_name;
+    }
+    
+    // Check database profile as fallback
+    if (userProfile?.full_name) {
+      return userProfile.full_name;
+    }
+    
+    return 'Anonymous User';
+  };
+
+  return (
+    <View className='flex-row items-center justify-between px-4 py-2 bg-white border-b border-[#ffe9e7]'>
+      {/* Left side - Logo and App Name */}
+      <View className='flex-row items-center'>
+        <View className='w-12 h-12 rounded-lg items-center justify-center'>
+          <Image source={require('../../assets/icon.png')} className='w-8 h-8' />
+        </View>
+        <Text className='text-xl font-bold text-gray-800'>SnapHive</Text>
+      </View>
+
+      {/* Right side - User Profile */}
+      <Pressable 
+        onPress={() => router.push('/profile')}
+        className='flex-row items-center'
+      >
+        <View className='w-8 h-8 rounded-full bg-gradient-to-br from-[#fdbf7b] to-[#fed194] items-center justify-center mr-2'>
+          <Text className='text-sm font-bold text-white'>
+            {getUserDisplayName().charAt(0).toUpperCase()}
+          </Text>
+        </View>
+        <Text className='text-sm font-medium text-gray-700'>
+          {getUserDisplayName()}
+        </Text>
+        <Ionicons name='chevron-down' size={16} color='#666' className='ml-1' />
+      </Pressable>
+    </View>
+  );
+});
+
+ThinHeader.displayName = 'ThinHeader';
 
 // Event Card Component
 const EventCard = memo(({ event }: { event: any }) => {
@@ -137,6 +196,7 @@ export default function EventsScreen () {
   if (isLoading) {
     return (
       <SafeAreaView className='flex-1 bg-white'>
+        <ThinHeader />
         <View className='flex-1 justify-center items-center'>
           <ActivityIndicator size="large" color="#fdbf7b" />
         </View>
@@ -147,6 +207,7 @@ export default function EventsScreen () {
   if (isError) {
     return (
       <SafeAreaView className='flex-1 bg-white'>
+        <ThinHeader />
         <View className='flex-1 justify-center items-center'>
           <Text className='text-gray-600 text-lg'>Error: {String(isError)}</Text>
         </View>
@@ -159,6 +220,7 @@ export default function EventsScreen () {
   if (!data || data.length === 0) {
     return (
       <SafeAreaView className='flex-1 bg-white'>
+        <ThinHeader />
         <NoEventsScreen />
       </SafeAreaView>
     );
@@ -166,6 +228,9 @@ export default function EventsScreen () {
 
   return (
     <SafeAreaView className='flex-1 bg-white'>
+      {/* Thin Header */}
+      <ThinHeader />
+      
       <View className='flex-1 px-4 pt-4'>
         <Link href='/events/create' asChild>
           <Pressable className='mb-6'>
