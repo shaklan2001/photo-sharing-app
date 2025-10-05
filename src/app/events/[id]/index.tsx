@@ -5,6 +5,7 @@ import {
   Pressable,
   FlatList,
 } from "react-native";
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Link, useLocalSearchParams } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 import { Stack } from "expo-router";
@@ -63,37 +64,39 @@ export default function EventDetails() {
         }}
       />
 
-      <FlatList
-        data={event.assets}
-        numColumns={2}
-        contentContainerClassName="gap-1 p-4"
-        columnWrapperClassName="gap-1"
-        renderItem={({ item }) => (
-          <View className="flex-1 max-w-[50%]">
-            <AssetItem asset={item} />
-          </View>
-        )}
-        contentInsetAdjustmentBehavior="automatic"
-        refreshing={isRefetching}
-        onRefresh={refetch}
-      />
-
-      {/* <FlatList
+      <SafeAreaView className='flex-1'>
+        <FlatList
           data={event.assets}
           numColumns={2}
-          contentContainerClassName='gap-1 p-4'
-          columnWrapperClassName='gap-1'
-          renderItem={({ item }) => <AssetItem asset={item} />}
-          contentInsetAdjustmentBehavior='automatic'
+          contentContainerClassName="gap-1 p-4"
+          columnWrapperClassName="gap-1"
+          renderItem={({ item }) => (
+            <View className="flex-1 max-w-[50%]">
+              <AssetItem asset={item} />
+            </View>
+          )}
+          contentInsetAdjustmentBehavior="automatic"
           refreshing={isRefetching}
           onRefresh={refetch}
-        /> */}
+        />
 
-      <Link href={`/events/${id || ''}/camera`} asChild>
-        <Pressable className="absolute bottom-12 right-4 flex-row items-center justify-center bg-white p-6 rounded-full">
-          <Ionicons name="camera-outline" size={40} color="black" />
-        </Pressable>
-      </Link>
+        {/* <FlatList
+            data={event.assets}
+            numColumns={2}
+            contentContainerClassName='gap-1 p-4'
+            columnWrapperClassName='gap-1'
+            renderItem={({ item }) => <AssetItem asset={item} />}
+            contentInsetAdjustmentBehavior='automatic'
+            refreshing={isRefetching}
+            onRefresh={refetch}
+          /> */}
+
+        <Link href={`/events/${id || ''}/camera`} asChild>
+          <Pressable className="absolute bottom-12 right-4 flex-row items-center justify-center bg-white p-6 rounded-full">
+            <Ionicons name="camera-outline" size={40} color="black" />
+          </Pressable>
+        </Link>
+      </SafeAreaView>
     </>
   );
 }

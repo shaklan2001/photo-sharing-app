@@ -1,6 +1,7 @@
 import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
 import { useCallback, useRef, useState } from 'react';
 import { ActivityIndicator, Button, StyleSheet, Text, Pressable, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { uploadToCloudinary } from '../lib/cloudinary';
@@ -8,7 +9,7 @@ import { uploadToCloudinary } from '../lib/cloudinary';
 export default function Camera() {
   const [facing, setFacing] = useState<CameraType>('back');
   const [permission, requestPermission] = useCameraPermissions();
-  const [flashMode, setFlashMode] = useState('off');
+  const [flashMode, setFlashMode] = useState<'off' | 'on'>('off');
   const camera = useRef<CameraView>(null);
 
   const toggleCameraFacing = useCallback(() => {
@@ -31,15 +32,15 @@ export default function Camera() {
 
   if (!permission.granted) {
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <Text style={styles.message}>We need your permission to show the camera</Text>
         <Button onPress={requestPermission} title="grant permission" />
-      </View>
+      </SafeAreaView>
     );
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <CameraView ref={camera} style={styles.camera} facing={facing} flash={flashMode} />
       <View className='w-full flex-row justify-between p-2 col-span-2 absolute bottom-32'>
         <Pressable onPress={openFlash}>
@@ -53,7 +54,7 @@ export default function Camera() {
         <Pressable className='bg-white rounded-full w-20 h-20' onPress={takePicture}>
         </Pressable>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 

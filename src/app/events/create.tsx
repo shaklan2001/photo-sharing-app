@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { View, TextInput, Button } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { useAuth } from '../../providers/AuthProvider';
@@ -21,7 +22,7 @@ export default function CreateEvent() {
   });
 
   return (
-    <View className='flex-1 p-4 gap-4'>
+    <SafeAreaView className='flex-1 p-4 gap-4'>
       <TextInput
         value={name}
         onChangeText={setName}
@@ -33,6 +34,6 @@ export default function CreateEvent() {
         title='Create Event'
         onPress={() => createEventMutation.mutate()}
       />
-    </View>
+    </SafeAreaView>
   );
 }

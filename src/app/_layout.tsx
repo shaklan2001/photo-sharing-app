@@ -1,5 +1,6 @@
 import { Stack, Link } from "expo-router";
 import { DarkTheme, ThemeProvider } from "@react-navigation/native";
+import { Platform } from "react-native";
 import "../../global.css";
 import { AuthProvider } from "../providers/AuthProvider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -26,8 +27,12 @@ const RootLayoutNav = () => {
         name="index"
         options={{
           title: "Events",
-          headerLargeTitle: true,
-          headerTransparent: true,
+          headerLargeTitle: Platform.OS === 'ios',
+          headerTransparent: Platform.OS === 'ios',
+          headerStyle: Platform.OS === 'android' ? {
+            backgroundColor: '#1a1a1a',
+          } : undefined,
+          headerTintColor: 'white',
         }}
       />
 
@@ -35,9 +40,13 @@ const RootLayoutNav = () => {
         name="events/[id]/index"
         options={{
           title: "Event",
-          headerLargeTitle: true,
-          headerTransparent: true,
+          headerLargeTitle: Platform.OS === 'ios',
+          headerTransparent: Platform.OS === 'ios',
           headerBackButtonDisplayMode: "minimal",
+          headerStyle: Platform.OS === 'android' ? {
+            backgroundColor: '#1a1a1a',
+          } : undefined,
+          headerTintColor: 'white',
         }}
       />
 
@@ -46,8 +55,12 @@ const RootLayoutNav = () => {
         options={{
           title: "Camera",
           headerBackButtonDisplayMode: "minimal",
-          headerTransparent: true,
-          headerBlurEffect: "dark",
+          headerTransparent: Platform.OS === 'ios',
+          headerBlurEffect: Platform.OS === 'ios' ? "dark" : undefined,
+          headerStyle: Platform.OS === 'android' ? {
+            backgroundColor: '#000000',
+          } : undefined,
+          headerTintColor: 'white',
           headerRight: () => (
             <Link href="/" className="mr-2 ml-2">
               <Ionicons name="share-outline" size={24} color="white" />
@@ -61,6 +74,10 @@ const RootLayoutNav = () => {
         options={{
           title: "Share",
           presentation: "modal",
+          headerStyle: Platform.OS === 'android' ? {
+            backgroundColor: '#1a1a1a',
+          } : undefined,
+          headerTintColor: 'white',
         }}
       />
 
@@ -69,6 +86,10 @@ const RootLayoutNav = () => {
         options={{
           title: "Join event",
           presentation: "modal",
+          headerStyle: Platform.OS === 'android' ? {
+            backgroundColor: '#1a1a1a',
+          } : undefined,
+          headerTintColor: 'white',
         }}
       />
 
@@ -77,6 +98,10 @@ const RootLayoutNav = () => {
         options={{
           title: "Create Event",
           presentation: "modal",
+          headerStyle: Platform.OS === 'android' ? {
+            backgroundColor: '#1a1a1a',
+          } : undefined,
+          headerTintColor: 'white',
         }}
       />
     </Stack>

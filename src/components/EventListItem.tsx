@@ -34,10 +34,10 @@ export default function EventListItem({ event }: EventListItemProps) {
         </View>
 
         {assets && assets.length > 0 && (
-          <View className='flex-row gap-1'>
+          <View className='flex-row gap-1 h-20'>
             {assets?.slice(0, 4).map((asset) => (
               <View key={asset.id} className='flex-1'>
-                <AssetItem asset={asset} />
+                <AssetItem asset={asset} isEventList={true} />
               </View>
             ))}
           </View>
