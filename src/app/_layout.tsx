@@ -24,7 +24,19 @@ const RootLayoutNav = () => {
   return (
     <Stack>
       <Stack.Screen
-        name="index"
+        name="splash"
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="onboarding"
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="events"
         options={{
           title: "Events",
           headerLargeTitle: Platform.OS === 'ios',
