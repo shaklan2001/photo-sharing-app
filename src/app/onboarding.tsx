@@ -172,8 +172,7 @@ export default function Onboarding() {
               </Pressable>
             ) : (
               <View className="flex-1 gap-3">
-                {/* Google Sign-In Button */}
-                <Pressable
+\                <Pressable
                   onPress={handleGoogleSignIn}
                   disabled={isSigningIn}
                   className={`bg-white rounded-[30px] py-4 flex-row items-center justify-center ${
@@ -191,7 +190,6 @@ export default function Onboarding() {
                   </Text>
                 </Pressable>
 
-                {/* Alternative Sign Up Button */}
                 <Pressable
                   onPress={() => router.replace("/events")}
                   className="bg-[#ffb600] rounded-[30px] py-4 flex-row items-center justify-center"

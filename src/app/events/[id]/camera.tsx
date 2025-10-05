@@ -6,7 +6,7 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { uploadToCloudinary } from '../../../lib/cloudinary';
 import { useLocalSearchParams } from 'expo-router';
-import { useAuth } from '../../../providers/AuthProvider';
+import { useAuth } from '../../../providers/TokenAuthProvider';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { insertAsset } from '../../../services/assets';
 
@@ -21,7 +21,7 @@ export default function Camera() {
 
   const insertAssetMutation = useMutation({
     mutationFn: (assetId: string) =>
-      insertAsset({ event_id: id, user_id: user?.id, asset_id: assetId }),
+      insertAsset({ event_id: id, user_id: user?.google_id, asset_id: assetId }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['events', id] });
     },

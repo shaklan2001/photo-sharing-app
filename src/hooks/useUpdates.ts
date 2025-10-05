@@ -7,7 +7,6 @@ export const useUpdates = () => {
   const [updateInfo, setUpdateInfo] = useState<any>(null);
 
   useEffect(() => {
-    // Get current update info on mount
     const info = UpdateService.getCurrentUpdateInfo();
     setUpdateInfo(info);
     console.log('Current update info:', info);
