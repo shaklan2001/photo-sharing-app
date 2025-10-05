@@ -2,7 +2,7 @@ import { View, Text, Button } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useAuth } from '../../../providers/AuthProvider';
+import { useAuth } from '../../../providers/TokenAuthProvider';
 import { getEvent, joinEvent } from '../../../services/events';
 
 
