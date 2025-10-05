@@ -2,12 +2,16 @@ import { useEffect } from 'react';
 import { router } from 'expo-router';
 import { useAuth } from '../providers/AuthProvider';
 
-export default function Entry() {
+export default function EventsScreen() {
   const { isAuthenticated } = useAuth();
 
   useEffect(() => {
-    router.replace('/splash');
-  }, []);
+    if (!isAuthenticated) {
+      router.replace('/onboarding');
+    } else {
+      router.replace('/events');
+    }
+  }, [isAuthenticated]);
 
   return null;
 }

@@ -29,14 +29,23 @@ const RootLayoutNav = () => {
           headerShown: false,
         }}
       />
+      
       <Stack.Screen
         name="onboarding"
         options={{
           headerShown: false,
         }}
       />
+      
       <Stack.Screen
         name="events"
+        options={{
+          headerShown: false,
+        }}
+      />
+      
+      <Stack.Screen
+        name="index"
         options={{
           title: "Events",
           headerLargeTitle: Platform.OS === 'ios',
@@ -51,14 +60,7 @@ const RootLayoutNav = () => {
       <Stack.Screen
         name="events/[id]/index"
         options={{
-          title: "Event",
-          headerLargeTitle: Platform.OS === 'ios',
-          headerTransparent: Platform.OS === 'ios',
-          headerBackButtonDisplayMode: "minimal",
-          headerStyle: Platform.OS === 'android' ? {
-            backgroundColor: '#1a1a1a',
-          } : undefined,
-          headerTintColor: 'white',
+          headerShown: false,
         }}
       />
 
@@ -108,12 +110,7 @@ const RootLayoutNav = () => {
       <Stack.Screen
         name="events/create"
         options={{
-          title: "Create Event",
-          presentation: "modal",
-          headerStyle: Platform.OS === 'android' ? {
-            backgroundColor: '#1a1a1a',
-          } : undefined,
-          headerTintColor: 'white',
+          headerShown: false,
         }}
       />
     </Stack>
