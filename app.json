@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "PhotoSharing",
-    "slug": "PhotoSharing",
+    "slug": "snap-hive",
     "scheme": "photosharing",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -49,7 +49,16 @@
       "expo-web-browser"
     ],
     "linking": {
-      "schemes": ["photosharing"]
-    }
+      "schemes": [
+        "photosharing"
+      ]
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "af385fdd-9032-4540-b1c3-e2b91235d973"
+      }
+    },
+    "owner": "shaklan2001"
   }
 }
