@@ -3,7 +3,7 @@ import { View, TextInput, Pressable, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
-import { useAuth } from '../../providers/TokenAuthProvider';
+import { useAuth } from '../../providers/AuthProvider';
 import { createEvent } from '../../services/events';
 import { LinearGradient } from 'expo-linear-gradient';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -20,10 +20,10 @@ export default function CreateEvent() {
 
   const createEventMutation = useMutation({
     mutationFn: () => {
-      if (!user?.google_id) {
+      if (!user?.id) {
         throw new Error('User not authenticated');
       }
-      return createEvent({ name, owner_id: user.google_id }, user.google_id);
+      return createEvent({ name, owner_id: user.id }, user.id);
     },
     onSuccess: (data) => {
       setName('');

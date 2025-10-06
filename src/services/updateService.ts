@@ -4,9 +4,10 @@ import { Alert } from 'react-native';
 export class UpdateService {
   static async checkForUpdates() {
     try {
-      if (!Updates.isEnabled) {
-        console.log('Updates are not enabled in development mode');
-        return;
+      // Skip update checks in development mode
+      if (__DEV__ || !Updates.isEnabled) {
+        console.log('Updates disabled in development mode');
+        return null;
       }
 
       const update = await Updates.checkForUpdateAsync();
@@ -19,6 +20,11 @@ export class UpdateService {
         return null;
       }
     } catch (error) {
+      // Silently handle development mode errors
+      if (__DEV__) {
+        console.log('Update check skipped in development');
+        return null;
+      }
       console.error('Error checking for updates:', error);
       return null;
     }
@@ -26,8 +32,8 @@ export class UpdateService {
 
   static async downloadAndInstallUpdate() {
     try {
-      if (!Updates.isEnabled) {
-        console.log('Updates are not enabled in development mode');
+      if (__DEV__ || !Updates.isEnabled) {
+        console.log('Updates disabled in development mode');
         return false;
       }
 

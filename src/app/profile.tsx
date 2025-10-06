@@ -3,7 +3,7 @@ import { View, Text, Pressable, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
-import { useAuth } from '../providers/TokenAuthProvider';
+import { useAuth } from '../providers/AuthProvider';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { getUserInfo } from '../services/user';
 import { User } from '@supabase/supabase-js';
@@ -17,7 +17,7 @@ interface UserWithProfile extends User {
 }
 
 export default function ProfileScreen() {
-  const { user, signOut } = useAuth();
+  const { user, loginType, signOut } = useAuth();
   const [userInfo, setUserInfo] = useState<UserWithProfile | null>(null);
 
   useEffect(() => {
@@ -45,7 +45,7 @@ export default function ProfileScreen() {
           style: 'destructive',
           onPress: async () => {
             await signOut();
-            router.replace('/onboarding');
+            router.replace('/signin');
           },
         },
       ]
@@ -53,21 +53,27 @@ export default function ProfileScreen() {
   };
 
   const getUserDisplayName = () => {
-    // Use user data from token auth provider
-    if (user?.full_name) {
-      return user.full_name;
+    // For Google users, use metadata or email
+    if (loginType === 'google') {
+      return user?.user_metadata?.full_name || 
+             user?.user_metadata?.name || 
+             user?.email?.split('@')[0] || 
+             'Google User';
     }
     
-    // Try profile data from database as fallback
-    if (userInfo?.profile?.full_name) {
-      return userInfo.profile.full_name;
+    // For email users, use metadata or email
+    if (loginType === 'email') {
+      return user?.user_metadata?.full_name || 
+             user?.email?.split('@')[0] || 
+             'User';
     }
     
-    return 'Anonymous User';
+    // Fallback
+    return userInfo?.profile?.full_name || 'User';
   };
 
   const getUserEmail = () => {
-    return user?.email || userInfo?.email || 'No email available';
+    return user?.email || 'No email available';
   };
 
   return (

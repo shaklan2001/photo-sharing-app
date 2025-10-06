@@ -2,7 +2,7 @@ import { Link } from 'expo-router'
 import { useRef, memo, useState, useEffect } from 'react'
 import { Text, ActivityIndicator, FlatList, Pressable, View, Image } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { useAuth } from '../providers/TokenAuthProvider'
+import { useAuth } from '../providers/AuthProvider'
 import { useQuery } from '@tanstack/react-query'
 import { getEvents } from '../services/events'
 import { getAssetsForEvent } from '../services/assets'
@@ -24,15 +24,19 @@ const ThinHeader = memo(() => {
   }, [user]);
 
   const getUserDisplayName = () => {
-    if (user?.full_name) {
-      return user.full_name;
+    if (user?.user_metadata?.full_name) {
+      return user.user_metadata.full_name;
     }
     
-    if (userProfile?.full_name) {
-      return userProfile.full_name;
+    if (user?.user_metadata?.name) {
+      return user.user_metadata.name;
     }
     
-    return 'Anonymous User';
+    if (user?.email) {
+      return user.email.split('@')[0];
+    }
+    
+    return 'User';
   };
 
   return (

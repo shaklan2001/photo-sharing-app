@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useAuth } from "../providers/TokenAuthProvider";
+// Remove useAuth import since we're not using it anymore
 
 const onboardingData = [
   {
@@ -38,7 +38,7 @@ export default function Onboarding() {
   const [isSigningIn, setIsSigningIn] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(50)).current;
-  const { signInWithGoogle, signInAnonymously } = useAuth();
+  // Removed auth hooks - navigation to auth screens instead
 
   useEffect(() => {
     fadeAnim.setValue(0);
@@ -66,27 +66,8 @@ export default function Onboarding() {
     }
   };
 
-  const handleGuestSignIn = async () => {
-    try {
-      setIsSigningIn(true);
-      
-      const { data, error } = await signInAnonymously();
-      
-      if (error) {
-        Alert.alert('Sign In Error', 'Failed to sign in as guest');
-        return;
-      }
-
-      if (data?.success) {
-        router.replace("/events");
-      } else {
-        Alert.alert('Sign In Error', 'Failed to sign in as guest');
-      }
-    } catch (error) {
-      Alert.alert('Sign In Error', 'Something went wrong. Please try again.');
-    } finally {
-      setIsSigningIn(false);
-    }
+  const handleGetStarted = () => {
+    router.push('/signup');
   };
 
   const prevScreen = () => {
@@ -98,27 +79,8 @@ export default function Onboarding() {
   const currentData = onboardingData[currentIndex];
   const isLastScreen = currentIndex === onboardingData.length - 1;
 
-  const handleGoogleSignIn = async () => {
-    try {
-      setIsSigningIn(true);
-      
-      const { data, error } = await signInWithGoogle();
-      
-      if (error) {
-        Alert.alert('Sign In Error', error.message || 'Failed to sign in with Google');
-        return;
-      }
-
-      if (data?.success) {
-        router.replace("/events");
-      } else {
-        Alert.alert('Sign In Error', 'Failed to sign in with Google');
-      }
-    } catch (error) {
-      Alert.alert('Sign In Error', 'Something went wrong. Please try again.');
-    } finally {
-      setIsSigningIn(false);
-    }
+  const handleSignIn = () => {
+    router.push('/signin');
   };
 
   return (
@@ -193,41 +155,29 @@ export default function Onboarding() {
                 />
               </Pressable>
             ) : (
-              <View className="flex-1 gap-3">
-\                <Pressable
-                  onPress={handleGoogleSignIn}
-                  disabled={isSigningIn}
-                  className={`bg-white rounded-[30px] py-4 flex-row items-center justify-center ${
-                    isSigningIn ? 'opacity-50' : ''
-                  }`}
-                >
-                  <Ionicons
-                    name="logo-google"
-                    size={20}
-                    color="#4285F4"
-                    style={{ marginRight: 8 }}
-                  />
-                  <Text className="text-gray-700 text-lg font-bold">
-                    {isSigningIn ? 'Signing in...' : 'Continue with Google'}
-                  </Text>
-                </Pressable>
-
+              <View className="flex-1" style={{ gap: 12 }}>
                 <Pressable
-                  onPress={handleGuestSignIn}
-                  disabled={isSigningIn}
-                  className={`bg-[#ffb600] rounded-[30px] py-4 flex-row items-center justify-center ${
-                    isSigningIn ? 'opacity-50' : ''
-                  }`}
+                  onPress={handleGetStarted}
+                  className="bg-[#ffb600] rounded-[30px] py-4 flex-row items-center justify-center"
                 >
                   <Text className="text-[#333] text-lg font-bold mr-1.5">
-                    {isSigningIn ? 'Signing in...' : 'Continue as Guest'}
+                    Get Started
                   </Text>
                   <Ionicons
-                    name="person-outline"
+                    name="arrow-forward"
                     size={20}
                     color="#333"
                     style={{ marginTop: 2 }}
                   />
+                </Pressable>
+
+                <Pressable
+                  onPress={handleSignIn}
+                  className="bg-white rounded-[30px] py-4 flex-row items-center justify-center border border-gray-200"
+                >
+                  <Text className="text-gray-700 text-lg font-bold">
+                    Already have an account? Sign In
+                  </Text>
                 </Pressable>
               </View>
             )}

@@ -1,36 +1,9 @@
 import { supabase } from "../lib/superbase";
 import { TablesInsert } from "../types/database.types";
-import { TokenManager } from "./tokenManager";
-
-// Helper function to get authenticated Supabase client
-async function getAuthenticatedSupabase() {
-  const token = await TokenManager.getAuthToken();
-  
-  if (!token) {
-    throw new Error('No authentication token found');
-  }
-
-  // Create a new client instance with the custom token
-  const { createClient } = await import('@supabase/supabase-js');
-  const { Database } = await import('../types/database.types');
-  
-  return createClient<Database>(
-    process.env.EXPO_PUBLIC_SUPABASE_URL!,
-    process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      global: {
-        headers: {
-          Authorization: `Bearer ${token.access_token}`,
-        },
-      },
-    }
-  );
-}
 
 export async function getEvents() {
   try {
-    const client = await getAuthenticatedSupabase();
-    const { data } = await client.from("events").select("*");
+    const { data } = await supabase.from("events").select("*");
     return data || [];
   } catch (error) {
     console.error('Error fetching events:', error);
@@ -40,8 +13,7 @@ export async function getEvents() {
 
 export async function getEventsForUser(userId: string) {
   try {
-    const client = await getAuthenticatedSupabase();
-    const { data } = await client.from("event_memberships").select(
+    const { data } = await supabase.from("event_memberships").select(
       "*, events(*, event_memberships(count))",
     ).eq("user_id", userId);
     
@@ -55,8 +27,7 @@ export async function getEventsForUser(userId: string) {
 
 export async function getEvent(id: string) {
   try {
-    const client = await getAuthenticatedSupabase();
-    const { data } = await client.from("events").select("*, assets(*)").eq("id", id).single();
+    const { data } = await supabase.from("events").select("*, assets(*)").eq("id", id).single();
     return data;
   } catch (error) {
     console.error('Error fetching event:', error);
@@ -69,10 +40,8 @@ export async function createEvent(
   userId: string,
 ) {
   try {
-    const client = await getAuthenticatedSupabase();
-    
     // Insert the event
-    const { data: eventData, error: eventError } = await client
+    const { data: eventData, error: eventError } = await supabase
       .from("events")
       .insert(newEvent)
       .select()
@@ -83,7 +52,7 @@ export async function createEvent(
     }
 
     // Add user as a member of the event
-    const { error: membershipError } = await client
+    const { error: membershipError } = await supabase
       .from("event_memberships")
       .insert({
         event_id: eventData.id,
@@ -104,8 +73,7 @@ export async function createEvent(
 
 export async function joinEvent(eventId: string, userId: string) {
   try {
-    const client = await getAuthenticatedSupabase();
-    const { data, error } = await client
+    const { data, error } = await supabase
       .from("event_memberships")
       .insert({
         event_id: eventId,
