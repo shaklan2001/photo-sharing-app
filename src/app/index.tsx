@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { router } from 'expo-router';
-import { useAuth } from '../providers/TokenAuthProvider';
+import { useAuth } from '../providers/AuthProvider';
 import SplashScreen from './splash';
 import { useUpdates } from '../hooks/useUpdates';
 

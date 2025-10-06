@@ -2,7 +2,7 @@ import { Stack, Link } from "expo-router";
 import { DarkTheme, ThemeProvider } from "@react-navigation/native";
 import { Platform } from "react-native";
 import "../../global.css";
-import { AuthProvider } from "../providers/TokenAuthProvider";
+import { AuthProvider } from "../providers/AuthProvider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
