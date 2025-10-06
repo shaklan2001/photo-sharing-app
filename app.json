@@ -3,7 +3,6 @@
     "name": "Snap Hive",
     "slug": "snap-hive",
     "scheme": "photosharing",
-    "deepLinks": true,
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -47,11 +46,6 @@
       ],
       "expo-web-browser"
     ],
-    "linking": {
-      "schemes": [
-        "photosharing"
-      ]
-    },
     "extra": {
       "router": {},
       "eas": {

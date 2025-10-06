@@ -1,31 +1,32 @@
 import * as Updates from 'expo-updates';
 import { Alert } from 'react-native';
+import { logger } from '../utils/logger';
 
 export class UpdateService {
   static async checkForUpdates() {
     try {
       // Skip update checks in development mode
       if (__DEV__ || !Updates.isEnabled) {
-        console.log('Updates disabled in development mode');
+        logger.log('Updates disabled in development mode');
         return null;
       }
 
       const update = await Updates.checkForUpdateAsync();
       
       if (update.isAvailable) {
-        console.log('Update available:', update);
+        logger.log('Update available:', update);
         return update;
       } else {
-        console.log('No updates available');
+        logger.log('No updates available');
         return null;
       }
     } catch (error) {
       // Silently handle development mode errors
       if (__DEV__) {
-        console.log('Update check skipped in development');
+        logger.log('Update check skipped in development');
         return null;
       }
-      console.error('Error checking for updates:', error);
+      logger.error('Error checking for updates:', error);
       return null;
     }
   }
@@ -33,14 +34,14 @@ export class UpdateService {
   static async downloadAndInstallUpdate() {
     try {
       if (__DEV__ || !Updates.isEnabled) {
-        console.log('Updates disabled in development mode');
+        logger.log('Updates disabled in development mode');
         return false;
       }
 
       const update = await Updates.fetchUpdateAsync();
       
       if (update.isNew) {
-        console.log('Update downloaded successfully');
+        logger.log('Update downloaded successfully');
         Alert.alert(
           'Update Available',
           'A new version is ready to install. The app will restart to apply the update.',
@@ -57,11 +58,11 @@ export class UpdateService {
         );
         return true;
       } else {
-        console.log('No new update to install');
+        logger.log('No new update to install');
         return false;
       }
     } catch (error) {
-      console.error('Error downloading update:', error);
+      logger.error('Error downloading update:', error);
       Alert.alert('Update Error', 'Failed to download update. Please try again later.');
       return false;
     }
@@ -77,7 +78,7 @@ export class UpdateService {
       
       return false;
     } catch (error) {
-      console.error('Error in update process:', error);
+      logger.error('Error in update process:', error);
       return false;
     }
   }

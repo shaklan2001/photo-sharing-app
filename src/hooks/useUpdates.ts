@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { UpdateService } from '../services/updateService';
+import { logger } from '../utils/logger';
 
 export const useUpdates = () => {
   const [isChecking, setIsChecking] = useState(false);
@@ -9,7 +10,7 @@ export const useUpdates = () => {
   useEffect(() => {
     const info = UpdateService.getCurrentUpdateInfo();
     setUpdateInfo(info);
-    console.log('Current update info:', info);
+    logger.log('Current update info:', info);
   }, []);
 
   const checkForUpdates = async () => {
@@ -19,7 +20,7 @@ export const useUpdates = () => {
       setUpdateAvailable(!!update);
       return update;
     } catch (error) {
-      console.error('Error checking for updates:', error);
+      logger.error('Error checking for updates:', error);
       return null;
     } finally {
       setIsChecking(false);
@@ -34,7 +35,7 @@ export const useUpdates = () => {
       }
       return success;
     } catch (error) {
-      console.error('Error installing update:', error);
+      logger.error('Error installing update:', error);
       return false;
     }
   };
@@ -48,7 +49,7 @@ export const useUpdates = () => {
       }
       return success;
     } catch (error) {
-      console.error('Error in check and install:', error);
+      logger.error('Error in check and install:', error);
       return false;
     } finally {
       setIsChecking(false);

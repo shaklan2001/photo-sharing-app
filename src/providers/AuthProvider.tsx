@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { User } from '@supabase/supabase-js'
 import { supabase } from '../lib/superbase'
 import { signInWithGoogle as googleSignIn } from '../lib/googleAuth'
+import { logger } from '../utils/logger'
 
 interface AuthContextType {
   user: User | null
@@ -40,7 +41,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     // Listen for auth state changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        console.log('Auth state changed:', event, !!session)
+        logger.log('Auth state changed:', event, !!session)
         
         if (session?.user) {
           setUser(session.user)
@@ -51,7 +52,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           const loginTypeValue = provider === 'google' ? 'google' : 'email'
           setLoginType(loginTypeValue)
           
-          console.log('User session:', { 
+          logger.log('User session:', { 
             userId: session.user.id, 
             email: session.user.email,
             provider,
@@ -83,7 +84,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const { data: { session }, error } = await supabase.auth.getSession()
       
       if (error && error.message !== 'Auth session missing!') {
-        console.error('Error getting session:', error)
+        logger.error('Error getting session:', error)
       }
       
       if (session?.user) {
@@ -95,7 +96,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setIsAuthenticated(true)
         setLoginType(loginTypeValue)
         
-        console.log('Existing session found:', { 
+        logger.log('Existing session found:', { 
           userId: session.user.id, 
           email: session.user.email,
           provider,
@@ -109,10 +110,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         })
       } else {
         // No session, user needs to sign in
-        console.log('No existing session found')
+        logger.log('No existing session found')
       }
     } catch (error) {
-      console.error('Error initializing auth:', error)
+      logger.error('Error initializing auth:', error)
     } finally {
       setIsLoading(false)
     }
@@ -130,7 +131,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         createdAt: Date.now()
       }))
     } catch (error) {
-      console.error('Error storing user session:', error)
+      logger.error('Error storing user session:', error)
     }
   }
 
@@ -138,7 +139,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       await AsyncStorage.removeItem(USER_SESSION_KEY)
     } catch (error) {
-      console.error('Error clearing user session:', error)
+      logger.error('Error clearing user session:', error)
     }
   }
 
@@ -147,14 +148,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const result = await googleSignIn()
       
       if (result.success) {
-        console.log('Google sign-in completed successfully')
+        logger.log('Google sign-in completed successfully')
         // The session should already be set by the googleSignIn function
         // The auth state change listener will handle updating the UI
       }
       
       return result
     } catch (error) {
-      console.error('Google sign-in error:', error)
+      logger.error('Google sign-in error:', error)
       return { error }
     }
   }
@@ -167,14 +168,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       })
 
       if (error) {
-        console.error('Email sign-in error:', error)
+        logger.error('Email sign-in error:', error)
         return { error }
       }
 
-      console.log('Email sign-in successful')
+      logger.log('Email sign-in successful')
       return { error: null }
     } catch (error) {
-      console.error('Email sign-in error:', error)
+      logger.error('Email sign-in error:', error)
       return { error }
     }
   }
@@ -192,14 +193,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       })
 
       if (error) {
-        console.error('Email sign-up error:', error)
+        logger.error('Email sign-up error:', error)
         return { error }
       }
 
-      console.log('Email sign-up successful')
+      logger.log('Email sign-up successful')
       return { error: null }
     } catch (error) {
-      console.error('Email sign-up error:', error)
+      logger.error('Email sign-up error:', error)
       return { error }
     }
   }
@@ -209,7 +210,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       await supabase.auth.signOut()
       await clearUserSession()
     } catch (error) {
-      console.error('Sign out error:', error)
+      logger.error('Sign out error:', error)
     }
   }
 

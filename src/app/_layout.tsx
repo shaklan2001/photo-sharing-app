@@ -5,18 +5,21 @@ import "../../global.css";
 import { AuthProvider } from "../providers/AuthProvider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { ErrorBoundary } from "../components/ErrorBoundary";
 
 const queryClient = new QueryClient();
 
 export default function RootLayout() {
   return (
-    <ThemeProvider value={DarkTheme}>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <RootLayoutNav />
-        </AuthProvider>
-      </QueryClientProvider>
-    </ThemeProvider>
+    <ErrorBoundary>
+      <ThemeProvider value={DarkTheme}>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <RootLayoutNav />
+          </AuthProvider>
+        </QueryClientProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 }
 

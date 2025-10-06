@@ -1,16 +1,14 @@
 import { useEffect } from 'react'
 import { View, Text } from 'react-native'
 import { useRouter } from 'expo-router'
+import { logger } from '../../utils/logger'
 
 export default function AuthCallback() {
   const router = useRouter()
 
   useEffect(() => {
-    // This route is mainly for the redirect URI, but the actual processing
-    // is now handled in the Google Auth function directly
-    console.log('Auth callback route accessed - redirecting to events')
+    logger.log('Auth callback route accessed - redirecting to events')
     
-    // Give a small delay to ensure any auth state changes are processed
     const timer = setTimeout(() => {
       router.replace('/events')
     }, 1000)

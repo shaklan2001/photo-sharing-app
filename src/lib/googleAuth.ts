@@ -1,6 +1,7 @@
 import * as WebBrowser from 'expo-web-browser'
 import { makeRedirectUri } from 'expo-auth-session'
 import { supabase } from './superbase'
+import { logger } from '../utils/logger'
 
 WebBrowser.maybeCompleteAuthSession()
 
@@ -11,7 +12,7 @@ export async function signInWithGoogle() {
       path: 'auth/callback',
     })
 
-    console.log('Redirect URI:', redirectTo)
+    logger.log('Redirect URI:', redirectTo)
     
     // Ensure WebBrowser session is properly completed
     WebBrowser.maybeCompleteAuthSession()
@@ -28,12 +29,12 @@ export async function signInWithGoogle() {
     })
 
     if (error) {
-      console.error('Google Sign-In Error:', error)
+      logger.error('Google Sign-In Error:', error)
       return { error }
     }
 
     if (data?.url) {
-      console.log('Opening auth session with URL:', data.url)
+      logger.log('Opening auth session with URL:', data.url)
       
       const result = await WebBrowser.openAuthSessionAsync(
         data.url, 
@@ -44,11 +45,11 @@ export async function signInWithGoogle() {
         }
       )
       
-      console.log('Auth session result:', result)
+      logger.log('Auth session result:', result)
       
       if (result.type === 'success') {
-        console.log('Google sign-in successful')
-        console.log('Callback URL received:', result.url)
+        logger.log('Google sign-in successful')
+        logger.log('Callback URL received:', result.url)
         
         // Process the tokens directly here instead of relying on the callback route
         try {
@@ -62,7 +63,7 @@ export async function signInWithGoogle() {
           // Handle hash fragment format (most common for OAuth)
           if (callbackUrl.includes('#')) {
             const hashPart = callbackUrl.split('#')[1]
-            console.log('Hash fragment:', hashPart)
+            logger.log('Hash fragment:', hashPart)
             
             const params = new URLSearchParams(hashPart)
             accessToken = params.get('access_token')
@@ -87,19 +88,19 @@ export async function signInWithGoogle() {
             if (errorMatch) error = decodeURIComponent(errorMatch[1])
           }
 
-          console.log('Extracted tokens:', {
+          logger.log('Extracted tokens:', {
             hasAccessToken: !!accessToken,
             hasRefreshToken: !!refreshToken,
             hasError: !!error
           })
 
           if (error) {
-            console.error('OAuth error:', error)
+            logger.error('OAuth error:', error)
             return { error: new Error(error) }
           }
 
           if (accessToken && refreshToken) {
-            console.log('Setting session with tokens...')
+            logger.log('Setting session with tokens...')
             
             const { data: sessionData, error: sessionError } = await supabase.auth.setSession({
               access_token: accessToken,
@@ -107,32 +108,32 @@ export async function signInWithGoogle() {
             })
             
             if (sessionError) {
-              console.error('Session set error:', sessionError)
+              logger.error('Session set error:', sessionError)
               return { error: sessionError }
             }
 
-            console.log('Session set successfully:', !!sessionData.session)
+            logger.log('Session set successfully:', !!sessionData.session)
             return { error: null, success: true }
           } else {
-            console.log('Missing tokens in callback URL')
+            logger.log('Missing tokens in callback URL')
             return { error: new Error('Missing authentication tokens') }
           }
         } catch (parseError) {
-          console.error('Error parsing callback URL:', parseError)
+          logger.error('Error parsing callback URL:', parseError)
           return { error: parseError }
         }
       } else if (result.type === 'cancel') {
-        console.log('Google sign-in cancelled by user')
+        logger.log('Google sign-in cancelled by user')
         return { error: new Error('Authentication cancelled') }
       } else {
-        console.log('Google sign-in failed:', result)
+        logger.log('Google sign-in failed:', result)
         return { error: new Error('Authentication failed') }
       }
     }
 
     return { error: new Error('No redirect URL received') }
   } catch (error) {
-    console.error('Google Sign-In Error:', error)
+    logger.error('Google Sign-In Error:', error)
     return { error }
   }
 }
@@ -141,6 +142,6 @@ export async function signOutGoogle() {
   try {
     await supabase.auth.signOut()
   } catch (error) {
-    console.error('Google Sign-Out Error:', error)
+    logger.error('Google Sign-Out Error:', error)
   }
 }

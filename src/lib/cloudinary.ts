@@ -1,16 +1,20 @@
 import { Cloudinary } from '@cloudinary/url-gen';
 import { Platform } from 'react-native';
 
+const cloudName = process.env.EXPO_PUBLIC_CLOUDINARY_CLOUD_NAME;
+
+if (!cloudName) {
+  throw new Error('Missing Cloudinary cloud name. Please check your .env file.');
+}
+
 export const cloudinary = new Cloudinary({
   cloud: {
-    cloudName: process.env.EXPO_PUBLIC_CLOUDINARY_CLOUD_NAME!,
-    // Android-specific configuration for better compatibility
+    cloudName,
     ...(Platform.OS === 'android' && {
       secure: true,
       cdnSubdomain: true,
     }),
   },
-  // Ensure HTTPS for Android security requirements
   url: {
     secure: true,
     cname: undefined,
