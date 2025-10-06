@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "PhotoSharing",
+    "name": "Snap Hive",
     "slug": "snap-hive",
     "scheme": "photosharing",
     "deepLinks": true,
